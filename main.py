@@ -13,15 +13,25 @@ def main():
 	game_over(word)
 
 def generate_word():
+	'''
+	input: None
+	returns: None
+	generates random word for wordlist.txt
+	'''
 	wordlist = pathlib.Path("wordlist.txt")
 	wordlist = [word.upper()
 	for word in wordlist.read_text(encoding="utf-8").split("\n")
 	if len(word) == 5 and all(letter in ascii_letters for letter in word)
 	]
-	print(wordlist)
+	# print(wordlist)
 	return random.choice(wordlist)
 
 def play_game(word):
+	'''
+	input: randomly generated word to be guessed
+	output: None
+	takes user input guesses and prints # of remaining guesses and letter analysis
+	'''
 	for num_guess in range(1,7):
 		guess = input(f"Guess {num_guess}: ").upper()
 	
@@ -43,6 +53,11 @@ def play_game(word):
 
 
 def game_over(word):
+	'''
+	input: randomly generated word to be guessed
+	output: None
+	if user wants to play again calls main, otherwise exits shell
+	'''
 	print(f'the word was: {word}')
 	play_again = input(f"Do you want to play again (Yes/no) ").upper()
 	if play_again == "YES":

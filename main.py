@@ -9,7 +9,13 @@ from string import ascii_letters
 
 def main():
 	word = generate_word()
-	play_game(word)
+	for num_guess in range(1,7):
+		guess = input(f"Guess {num_guess}: ").upper()
+	
+		if guess == 'EXIT':
+			sys.exit()
+
+		play_game(word)	
 	game_over(word)
 
 def generate_word():
@@ -26,30 +32,29 @@ def generate_word():
 	# print(wordlist)
 	return random.choice(wordlist)
 
-def play_game(word):
-	'''
-	input: randomly generated word to be guessed
+def show_guess(guess, word):
+	'''	input: randomly generated word to be guessed
 	output: None
 	takes user input guesses and prints # of remaining guesses and letter analysis
-	'''
-	for num_guess in range(1,7):
-		guess = input(f"Guess {num_guess}: ").upper()
 	
-		if guess == 'EXIT':
-			sys.exit()
+	test example: run with python -m doctest -v main.py
+	>>> show_guess("CRANE", "SNAKE")
+	correct letters:  A, E
+	misplaced letters:  N
+	wrong letters:  C, R
+	'''
 
-		if guess == word:
-			print("correct")
-			break
-
+	if guess == word:
+		print("correct")
+	else:
 		correct_lets = {guess_letter for guess_letter, correct_letter in zip(guess, word) if guess_letter == correct_letter}
 		misplaced_lets = set(guess) & set(word) - correct_lets
 		wrong_lets = set(guess) - set(word)
 		print("correct letters: ", ", ".join(sorted(correct_lets)))
-		print("misplaced_letters: ", ", ".join(sorted(misplaced_lets)))
-		print("wrong_letters: ", ", ".join(sorted(wrong_lets)))
+		print("misplaced letters: ", ", ".join(sorted(misplaced_lets)))
+		print("wrong letters: ", ", ".join(sorted(wrong_lets)))
 		
-		print(f'Your guess, {guess}, is incorrect. You have {6-num_guess} guesses remaining.')
+		#print(f'Your guess, {guess}, is incorrect. You have {6-num_guess} guesses remaining.')
 
 
 def game_over(word):

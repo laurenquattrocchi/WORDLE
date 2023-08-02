@@ -3,7 +3,7 @@
 import sys
 import pathlib
 import random
-from string import ascii_letters
+from string import ascii_letters, ascii_uppercase
 
 from rich.console import Console
 from rich.theme import Theme
@@ -64,6 +64,7 @@ def show_guesses(guesses, word):
 	output: None
 	takes user input guesses and prints # of remaining guesses and letter analysis
 	
+	#need to update test example
 	test example: run with python -m doctest -v main.py
 	>>> show_guess("CRANE", "SNAKE")
 	correct letters:  A, E
@@ -71,6 +72,7 @@ def show_guesses(guesses, word):
 	wrong letters:  C, R
 	'''
 
+	letter_status = {letter: letter for letter in ascii_uppercase}
 	for guess in guesses:
 		styled_guess = []
 		# wrap each guess in markup block w/ appropriate color for level of correctness
@@ -83,18 +85,17 @@ def show_guesses(guesses, word):
 			elif guess_letter in ascii_letters:
 				style = "white on #666666"
 			else:
-				style = "dim"
-			styled_guess.append(f"[{style}]{guess_letter}[/]") 
-
+				style = "dim" 
+			styled_guess.append(f"[{style}]{guess_letter}[/]")
+			if guess_letter != "_":
+				letter_status[guess_letter] = f"[{style}]{guess_letter}[/]"
+            
 		console.print("".join(styled_guess), justify="center")
-			# misplaced_lets = set(guess) & set(word) - correct_lets
-			# wrong_lets = set(guess) - set(word)
-			# print("correct letters: ", ", ".join(sorted(correct_lets)))
-			# print("misplaced letters: ", ", ".join(sorted(misplaced_lets)))
-			# print("wrong letters: ", ", ".join(sorted(wrong_lets)))
+	console.print("".join(letter_status.values()), justify="center")
 			
-			#print(f'Your guess, {guess}, is incorrect. You have {6-num_guess} guesses remaining.')
-
+def display_characters(): 
+	for char in string.ascii_lowercase: 
+		print(char, end=' ') 
 
 def game_over(word, correct, guesses):
 	'''
@@ -103,11 +104,12 @@ def game_over(word, correct, guesses):
 	if user wants to play again calls main, otherwise exits shell
 	'''
 
-	show_guesses(guesses, word)
 	if correct:
 		headline = "Congratulations, you win"
 	else:
 		headline = f"Game over, the correct word was {word}"
+	refresh_page(headline)
+	show_guesses(guesses, word)
 
 	console.rule(f"[bold blue] :leafy_green: {headline} :leafy_green:[/]\n")
 	play_again = input(f"Do you want to play again (Yes/no) ").upper()
